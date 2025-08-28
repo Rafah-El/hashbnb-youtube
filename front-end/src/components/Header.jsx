@@ -1,22 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
     <div className="shadow-md">
-      <div className="flex items-center justify-between px-8 py-4 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between px-4 py-4 sm:px-8 max-w-7xl mx-auto">
         
         {/* Logo */}
-        <div className="flex items-center">
+        <Link to='/' className="flex items-center">
           <img 
             className="h-10"
             src="https://cdn.prod.website-files.com/61b9e0dd381626819c8d4f83/65e2198d48039ba6444f602b_logo%20hashtag%20-%20h.webp" 
             alt="Logo da Hashtag" 
           />
           <p className="text-2xl font-bold text-primary-400">ashbnb</p>  
-        </div>
+        </Link>
 
         {/* Barra de busca central */}
-        <div className="flex items-center border border-gray-300 py-2 pr-4 pl-6 rounded-full shadow-md">
+        <Link to='/' className="flex items-center border border-gray-300 py-2 pr-4 pl-6 rounded-full shadow-md">
           <p className="border-r border-r-gray-300 pr-4">Qualquer lugar</p>
           <p className="border-r border-r-gray-300 px-4">Qualquer semana</p>
           <p className="px-4">Hóspedes</p>
@@ -36,10 +37,10 @@ const Header = () => {
               />
             </svg>
           </div>
-        </div>
+        </Link>
 
         {/* Menu + Perfil + Nome */}
-        <div className="flex items-center gap-3 border border-gray-300 rounded-full shadow-md py-2 px-4">
+        <Link to="/login" className="flex items-center gap-2 border border-gray-300 rounded-full shadow-md py-2 px-4">
           
           {/* Ícone de menu */}
           <svg xmlns="http://www.w3.org/2000/svg" 
@@ -47,8 +48,7 @@ const Header = () => {
             className="w-6 h-6 cursor-pointer text-gray-600">
             <path
               fillRule="evenodd" 
-              d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 
-              0 0 1 0 1.5H3.75A.75.75 0 0 1 
+              d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 
               3 6.75ZM3 12a.75.75 0 0 1 
               .75-.75h16.5a.75.75 0 0 1 0 
               1.5H3.75A.75.75 0 0 1 
@@ -82,8 +82,8 @@ const Header = () => {
           </svg>
 
           {/* Nome do usuário */}
-          <p className="text-gray-700 font-medium">Rafael XYZ</p>
-        </div>
+          <p className="text-gray-700 font-medium max-w-20 truncate sm:max-w-32">Rafael XYZ</p>
+        </Link>
       </div>
     </div>
   ); 
