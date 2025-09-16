@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ user }) => {
+  console.log(user);
   return (
     <div className="shadow-md">
       <div className="flex items-center justify-between px-4 py-4 sm:px-8 max-w-7xl mx-auto">
         
         {/* Logo */}
-        <Link to='/' className="flex items-center">
+        <Link to={user ? "/account" : '/login'} className="flex items-center">
           <img 
             className="h-10"
             src="https://cdn.prod.website-files.com/61b9e0dd381626819c8d4f83/65e2198d48039ba6444f602b_logo%20hashtag%20-%20h.webp" 
@@ -82,7 +83,8 @@ const Header = () => {
           </svg>
 
           {/* Nome do usuário */}
-          <p className="text-gray-700 font-medium max-w-20 truncate sm:max-w-32">Rafael XYZ</p>
+          {user ? <p className="text-gray-700 font-medium max-w-20 truncate sm:max-w-32">{user.name}</p> : <></>}
+          
         </Link>
       </div>
     </div>
