@@ -11,21 +11,22 @@ const Register = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-//     if (email && password) {
-//       try {
-//         const { data: userDoc } = await axios.post("/users/login", {
-//           email,
-//           password,
-//         });
+    if (email && password && name) {
+      try {
+        const { data: userDoc } = await axios.post("/users", {
+          name,
+          email,
+          password,
+        });
 
-//         setUser(userDoc); // usa a função vinda das props
-//         setRedirect(true); 
-//       } catch (error) {
-//         alert(`Deu um erro ao logar: ${error.response?.data || error.message}`);
-//       }
-//     } else {
-//       alert("Você precisa preencher o e-mail e a senha!");
-//     }
+        setUser(userDoc); // usa a função vinda das props
+        setRedirect(true); 
+      } catch (error) {
+        alert(`Deu um erro ao cadastrar o usuário: ${error.response?.data || error.message}`);
+      }
+    } else {
+      alert("Você precisa preencher o e-mail, o nome e a senha!");
+    }
   };
 
   if (redirect) return <Navigate to="/" />;
@@ -45,7 +46,7 @@ const Register = ({ setUser }) => {
             onChange={(e) => 
               setEmail(e.target.value)} 
             /> 
-              <input type="text" className="w-full rounded-full border border-gray-300 px-4 py-2" 
+              <input type="password" className="w-full rounded-full border border-gray-300 px-4 py-2" 
               placeholder="Digite sua senha" 
               value={password} 
               onChange={(e) => 

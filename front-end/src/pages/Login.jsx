@@ -1,6 +1,7 @@
 import React, { useState } from "react"; 
 import { Link, Navigate } from 'react-router-dom'; 
 import axios from 'axios';
+import api from "../api";
 
 const Login = ({ user, setUser }) => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const Login = ({ user, setUser }) => {
 
     if (email && password) {
       try {
-        const { data: userDoc } = await axios.post("/users/login", {
+        const { data: userDoc } = await api.post("/users/login", {
           email,
           password,
         });
@@ -38,7 +39,7 @@ const Login = ({ user, setUser }) => {
             value={email} 
             onChange={(e) => 
               setEmail(e.target.value)} /> 
-              <input type="text" className="w-full rounded-full border border-gray-300 px-4 py-2" 
+              <input type="password" className="w-full rounded-full border border-gray-300 px-4 py-2" 
               placeholder="Digite sua senha" 
               value={password} 
               onChange={(e) => 
