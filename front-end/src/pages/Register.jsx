@@ -1,8 +1,10 @@
 import React, { useState } from "react"; 
 import { Link, Navigate } from 'react-router-dom'; 
 import axios from 'axios';
+import { useUserContext } from "../contexts/UserContext";
 
-const Register = ({ setUser }) => {
+const Register = () => {
+  const { setUser } = useUserContext();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +24,7 @@ const Register = ({ setUser }) => {
         setUser(userDoc); // usa a função vinda das props
         setRedirect(true); 
       } catch (error) {
-        alert(`Deu um erro ao cadastrar o usuário: ${error.response?.data || error.message}`);
+        alert(`Deu um erro ao cadastrar o usuário: ${error.response?.data?.message || error.message}`);
       }
     } else {
       alert("Você precisa preencher o e-mail, o nome e a senha!");

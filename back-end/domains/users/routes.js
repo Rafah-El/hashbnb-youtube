@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from "express"; 
 import User from "./model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -20,7 +20,7 @@ function sendTokenAndUser(res, userObj) {
     .json(userObj);
 }
 
-// GET /users - listar todos os usuários (admin/debug)
+// GET /users - listar todos os usuários
 router.get("/", async (req, res) => {
   try {
     const userDoc = await User.find();
@@ -40,18 +40,14 @@ router.get("/profile", async (req, res) => {
       return res.status(401).json({ message: "Não autenticado" });
     }
 
-    jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ message: "Token inválido" });
-      }
+    const decoded = await jwt.verify(token, JWT_SECRET_KEY);
 
-      const userDoc = await User.findById(decoded._id, { password: 0 });
-      if (!userDoc) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
-      }
+    const userDoc = await User.findById(decoded._id, { password: 0 });
+    if (!userDoc) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
 
-      res.json(userDoc);
-    });
+    res.json(userDoc);
   } catch (error) {
     console.error("Erro ao buscar perfil:", error);
     res.status(500).json({ message: "Erro ao buscar perfil" });
@@ -79,10 +75,11 @@ router.post("/", async (req, res) => {
     console.error("Erro ao criar usuário:", error);
 
     if (error.code === 11000) {
-      return res.status(400).json({ message: "E-mail já cadastrado" });
+      return res.status(400).json({ message: "E-mail já cadastrado!" });
     }
 
     res.status(500).json({ message: "Erro ao criar usuário" });
+    throw error;
   }
 });
 
@@ -99,7 +96,7 @@ router.post("/login", async (req, res) => {
 
     const passwordCorrect = bcrypt.compareSync(password, userDoc.password);
     if (!passwordCorrect) {
-      return res.status(400).json({ message: "Senha inválida" });
+      return res.status(400).json({ message: "Senha inválida!" });
     }
 
     const { name, _id } = userDoc;
@@ -110,6 +107,10 @@ router.post("/login", async (req, res) => {
     console.error("Erro no login:", error);
     res.status(500).json({ message: "Erro no login" });
   }
+});
+
+router.post("/logout", (req, res) => {
+   res.clearCookie("token").json("Deslogado com sucesso!");
 });
 
 export default router;
