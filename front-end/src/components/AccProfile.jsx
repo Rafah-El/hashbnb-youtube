@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import { useUserContext} from '../contexts/UserContext'; 
+import { useState } from "react";
 
 
 const AccProfile = () => {
@@ -19,7 +20,7 @@ const AccProfile = () => {
 
   return (
     <div className='flex flex-col items-center gap-4'>
-                    <p>Logado como {user.name} ({user.email})</p>
+                    <p>Logado como{user.name} ({user.email})</p>
 
                 <button onClick={logout} className='bg-primary-400 min-w-44 px-4 rounded-full py-2 cursor-pointer text-white transition'>
                 Logout

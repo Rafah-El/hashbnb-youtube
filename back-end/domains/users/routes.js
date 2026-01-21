@@ -9,7 +9,13 @@ const { JWT_SECRET_KEY, NODE_ENV } = process.env;
 
 // Função auxiliar para criar e enviar cookie + userObj
 function sendTokenAndUser(res, userObj) {
-  const token = jwt.sign(userObj, JWT_SECRET_KEY);
+  const token = jwt.sign(userObj, JWT_SECRET_KEY, {}, (error, token) => {
+   if (error) {
+    console.error(error);
+    res.status(500).json(error);
+    return;
+  };
+  
 
   res
     .cookie("token", token, {
@@ -18,6 +24,7 @@ function sendTokenAndUser(res, userObj) {
       secure: NODE_ENV === "production", // true apenas em produção com HTTPS
     })
     .json(userObj);
+    });
 }
 
 // GET /users - listar todos os usuários
