@@ -1,73 +1,40 @@
-import { Router } from "express"; 
+import "dotenv/config";
+import { Router } from "express";
+import { connectDb } from "../../config/db.js";
 import User from "./model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { JWTVerify, JWTSign } from "../../utils/jwt.js";
 
 const router = Router();
 const bcryptSalt = bcrypt.genSaltSync();
-const { JWT_SECRET_KEY, NODE_ENV } = process.env;
+const { JWT_SECRET_KEY } = process.env;
 
-// Função auxiliar para criar e enviar cookie + userObj
-function sendTokenAndUser(res, userObj) {
-  const token = jwt.sign(userObj, JWT_SECRET_KEY, {}, (error, token) => {
-   if (error) {
-    console.error(error);
-    res.status(500).json(error);
-    return;
-  };
-  
-
-  res
-    .cookie("token", token, {
-      httpOnly: true,
-      sameSite: NODE_ENV === "production" ? "none" : "lax",
-      secure: NODE_ENV === "production", // true apenas em produção com HTTPS
-    })
-    .json(userObj);
-    });
-}
-
-// GET /users - listar todos os usuários
 router.get("/", async (req, res) => {
+  connectDb();
+
   try {
     const userDoc = await User.find();
+
     res.json(userDoc);
   } catch (error) {
-    console.error("Erro ao listar usuários:", error);
-    res.status(500).json({ message: "Erro ao listar usuários" });
+    res.status(500).json(error);
   }
 });
 
-// GET /users/profile - retorna apenas o usuário logado
 router.get("/profile", async (req, res) => {
-  try {
-    const { token } = req.cookies;
+  const userInfo = await JWTVerify(req);
 
-    if (!token) {
-      return res.status(401).json({ message: "Não autenticado" });
-    }
-
-    const decoded = await jwt.verify(token, JWT_SECRET_KEY);
-
-    const userDoc = await User.findById(decoded._id, { password: 0 });
-    if (!userDoc) {
-      return res.status(404).json({ message: "Usuário não encontrado" });
-    }
-
-    res.json(userDoc);
-  } catch (error) {
-    console.error("Erro ao buscar perfil:", error);
-    res.status(500).json({ message: "Erro ao buscar perfil" });
-  }
+  res.json(userInfo);
 });
 
-// POST /users - criar usuário
 router.post("/", async (req, res) => {
+  connectDb();
+
   const { name, email, password } = req.body;
+  const encryptedPassword = bcrypt.hashSync(password, bcryptSalt);
 
   try {
-    const encryptedPassword = bcrypt.hashSync(password, bcryptSalt);
-
     const newUserDoc = await User.create({
       name,
       email,
@@ -77,47 +44,54 @@ router.post("/", async (req, res) => {
     const { _id } = newUserDoc;
     const newUserObj = { name, email, _id };
 
-    sendTokenAndUser(res, newUserObj);
-  } catch (error) {
-    console.error("Erro ao criar usuário:", error);
+    try {
+      const token = await JWTSign(newUserObj);
 
-    if (error.code === 11000) {
-      return res.status(400).json({ message: "E-mail já cadastrado!" });
+      res.cookie("token", token).json(newUserObj);
+    } catch (error) {
+      res.status(500).json("Erro ao assinar com o JWT", error);
     }
-
-    res.status(500).json({ message: "Erro ao criar usuário" });
+  } catch (error) {
+    res.status(500).json(error);
     throw error;
   }
 });
 
-// POST /users/login - login de usuário
 router.post("/login", async (req, res) => {
+  connectDb();
+
   const { email, password } = req.body;
 
   try {
     const userDoc = await User.findOne({ email });
 
-    if (!userDoc) {
-      return res.status(400).json({ message: "Usuário não encontrado" });
+    if (userDoc) {
+      const passwordCorrect = bcrypt.compareSync(password, userDoc.password);
+      const { name, _id } = userDoc;
+
+      if (passwordCorrect) {
+        const newUserObj = { name, email, _id };
+        try {
+          const token = await JWTSign(newUserObj);
+
+          res.cookie("token", token).json(newUserObj);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json("Erro ao assinar com o JWT");
+        }
+      } else {
+        res.status(400).json("Senha inválida!");
+      }
+    } else {
+      res.status(400).json("Usuário não encontrado!");
     }
-
-    const passwordCorrect = bcrypt.compareSync(password, userDoc.password);
-    if (!passwordCorrect) {
-      return res.status(400).json({ message: "Senha inválida!" });
-    }
-
-    const { name, _id } = userDoc;
-    const newUserObj = { name, email, _id };
-
-    sendTokenAndUser(res, newUserObj);
   } catch (error) {
-    console.error("Erro no login:", error);
-    res.status(500).json({ message: "Erro no login" });
+    res.status(500).json(error);
   }
 });
 
 router.post("/logout", (req, res) => {
-   res.clearCookie("token").json("Deslogado com sucesso!");
+  res.clearCookie("token").json("Deslogado com sucesso!");
 });
 
 export default router;

@@ -3,6 +3,7 @@ import express from "express";
 import { connectDb } from "./config/db.js";
 import bcrypt from "bcryptjs";
 import UserRoutes from './domains/users/routes.js'
+import PlaceRoutes from "./domains/places/routes.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 
@@ -18,6 +19,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use("/users", UserRoutes);
+app.use("/places", PlaceRoutes);
 // Conectar ao MongoDB UMA VEZ, antes das rotas
 connectDb();
   

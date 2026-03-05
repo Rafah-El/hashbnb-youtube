@@ -15,6 +15,12 @@ import Perks from './Perks';
 
     const handleSubmit = (e) => {
       e.preventDefault();
+
+      // const newPlace = await axios.post('/places', {
+
+      // })
+
+
     };
 
    return (
@@ -98,64 +104,76 @@ import Perks from './Perks';
             onChange={(e) => setExtras(e.target.value)}
             />
         </div>
-        <div className='flex flex-col gap-1'>
-            <h2
-             className='ml-2 text-2xl font-bold'>Restrições e Preço</h2>
+        
 
-             <div className='grid grid-cols-[repeat(auto-fit,minmax(225px,1fr))] gap-6'></div>
-             <div className='flex flex-col gap-2'>
-                <label className="ml-2 text-xl font-bold"
-                htmlFor="price">Preço</label>
-                <input 
-                type="number" 
-                placeholder='500' className='rounded-full border border-gray-300 py-2 px-4'
-                id='price'
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-            />  
-             </div>
+            <div className='flex flex-col gap-1'>
+  <h2 className='ml-2 text-2xl font-bold'>Restrições e Preço</h2>
 
-             <div className='flex flex-col gap-2'>
-                <label className="ml-2 text-xl font-bold"
-                htmlFor="checkin">Checkin</label>
-                <input 
-                type="text" 
-                placeholder='16:00' className='rounded-full border border-gray-300 py-2 px-4'
-                id='checkin'
-                value={checkin}
-                onChange={(e) => setCheckin(e.target.value)}
-            />  
-             </div>
+  {/* GRID DOS CAMPOS */}
+  <div className='grid grid-cols-4 gap-6'>
+    
+    <div className='flex flex-col gap-2'>
+      <label className="ml-2 text-xl font-bold" htmlFor="price">
+        Preço
+      </label>
+      <input
+        type="number"
+        placeholder="500"
+        className="rounded-full border border-gray-300 py-2 px-4"
+        id="price"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+      />
+    </div>
 
-             <div className='flex flex-col gap-2'>
-                <label className="ml-2 text-xl font-bold"
-                htmlFor="checkout">Checkout</label>
-                <input 
-                type="text" 
-                placeholder='12:00' className='rounded-full border border-gray-300 py-2 px-4'
-                id='checkout'
-                value={checkout}
-                onChange={(e) => setCheckout(e.target.value)}
-            />  
-             </div>
+    <div className='flex flex-col gap-2'>
+      <label className="ml-2 text-xl font-bold" htmlFor="checkin">
+        Checkin
+      </label>
+      <input
+        type="text"
+        placeholder="16:00"
+        className="rounded-full border border-gray-300 py-2 px-4"
+        id="checkin"
+        value={checkin}
+        onChange={(e) => setCheckin(e.target.value)}
+      />
+    </div>
 
-             <div className='flex flex-col gap-2'>
-                <label className="ml-2 text-xl font-bold"
-                htmlFor="guests">N° convidados</label>
-                <input 
-                type="number" 
-                placeholder='4' className='rounded-full border border-gray-300 py-2 px-4'
-                id='guests'
-                value={guests}
-                onChange={(e) => setGuests(e.target.value)}
-            />  
-             </div>
+    <div className='flex flex-col gap-2'>
+      <label className="ml-2 text-xl font-bold" htmlFor="checkout">
+        Checkout
+      </label>
+      <input
+        type="text"
+        placeholder="12:00"
+        className="rounded-full border border-gray-300 py-2 px-4"
+        id="checkout"
+        value={checkout}
+        onChange={(e) => setCheckout(e.target.value)}
+      />
+    </div>
 
-        </div>
+    <div className='flex flex-col gap-2'>
+      <label className="ml-2 text-xl font-bold" htmlFor="guests">
+        N° convidados
+      </label>
+      <input
+        type="number"
+        placeholder="4"
+        className="rounded-full border border-gray-300 py-2 px-4"
+        id="guests"
+        value={guests}
+        onChange={(e) => setGuests(e.target.value)}
+      />
+    </div>
 
-        <button className='hover:bg-primary-500  bg-primary-400 min-w-44 px-4 rounded-full py-2 cursor-pointer text-white transition'>Salvar informações</button>
-     </form>
-   )
+  </div>
+</div>
+<button 
+className='hover:bg-primary-500 bg-primary-400 min-w-44 px-4 rounded-full py-2 cursor-pointer text-white transition'>Salvar informações
+</button>
+</form> 
+)
  }
- 
- export default NewPlace
+export default NewPlace;
